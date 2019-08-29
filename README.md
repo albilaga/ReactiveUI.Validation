@@ -42,6 +42,10 @@ public class SampleViewModel : ReactiveObject, ISupportsValidation
             viewModel => viewModel.Name,
             name => !string.IsNullOrWhiteSpace(name),
             "You must specify a valid name");
+        // Creates the validation based on 2 properties. Here  we using Name and Age
+        this.ValidationRule(
+            _ => this.WhenAny(vm => vm.Age, vm => vm.Name, (a, n) => new { Age = a.Value, Name = n.Value }).Select(v => v.Age > 10 && !string.IsNullOrEmpty(v.Name)),
+            (vm, state) => "Name and age combination is not valid");
     }
 
     public ValidationContext ValidationContext { get; } = new ValidationContext();
